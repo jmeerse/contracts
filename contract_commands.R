@@ -1,8 +1,10 @@
 library(tidyverse)
 library(nflreadr)
 library(ggrepel)
+load("C:/Users/jmeer/OneDrive/Desktop/sports analytics R stuff/contracts/.RData")
 
 all_con <- load_contracts()
+dist_con <- all_con %>% distinct() #removes duplicated rows
 
 twocon <- all_con %>% group_by(otc_id) %>% summarise(n = n()) %>% filter(n >= 2) %>% ungroup()
 
@@ -40,6 +42,12 @@ two_con %>% ggplot(aes(x= year_signed,
 two_con <- two_con %>%
   group_by(otc_id) %>%
   mutate(Diff = value - lag(value)) #increase/decrease in total value - should look at apy instead?
+
+two_con <- two_con %>%
+  group_by(otc_id) %>%
+  mutate(pct_chg = 100 * apy / lag(apy) - 100)
+
+nozerocon <-  two_con %>% group_by(otc_id) %>% filter(min(apy) >0) %>% ungroup()
 
 #ave increase by position
 contract2 <- two_con %>% group_by(position) %>% 
@@ -86,3 +94,4 @@ two_con %>% ggplot(aes(x = position, y = apy)) + geom_boxplot()
 fitz <- two_con %>% filter(player == "Ryan Fitzpatrick")
 two_con %>% ggplot(aes(x = year_signed)) + geom_histogram() #see how many contracts were signed each year
 
+dist_con <- all_con %>% distinct() 
