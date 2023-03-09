@@ -95,3 +95,6 @@ fitz <- two_con %>% filter(player == "Ryan Fitzpatrick")
 two_con %>% ggplot(aes(x = year_signed)) + geom_histogram() #see how many contracts were signed each year
 
 dist_con <- all_con %>% distinct() 
+
+nozerocon %>% ggplot(aes(x = position, y = pct_chg, group = position)) + geom_boxplot()
+nozerocon %>% ggplot(aes(x = position, y = apy_cap_pct, group = position)) + geom_boxplot()
